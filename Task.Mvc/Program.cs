@@ -3,7 +3,8 @@ using Task.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
