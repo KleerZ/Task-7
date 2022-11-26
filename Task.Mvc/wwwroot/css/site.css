@@ -16,3 +16,22 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.modal-signin{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; !important;
+  height: 100%; !important;
+}
+
+.modal-dialog{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90%
+}
+
+.valid-error{
+  color: red;
+}
