@@ -31,3 +31,7 @@ body {
   align-items: center;
   height: 90%
 }
+
+.valid-error{
+  color: red;
+}
