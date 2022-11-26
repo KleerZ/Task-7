@@ -1,4 +1,13 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿let connectionIdInput = document.getElementById('connect-id-input')
+let connectButton = document.querySelector('#connect-btn')
 
-// Write your JavaScript code.
+function checkConnectionInput(){
+    if (connectionIdInput.value.length > 0) {
+        connectButton.removeAttribute('disabled')
+    }
+    else{
+        connectButton.setAttribute('disabled', 'disabled')
+    }
+}
+
+connectionIdInput.oninput = () => checkConnectionInput();

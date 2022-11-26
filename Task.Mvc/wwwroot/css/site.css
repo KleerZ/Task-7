@@ -13,10 +13,6 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
-}
-
 .modal-signin{
   display: flex;
   justify-content: center;
@@ -34,4 +30,22 @@ body {
 
 .valid-error{
   color: red;
+}
+
+.free-game{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px;
+  border: 1px solid #bbbaba;
+  padding-right: 30px;
+  padding-left: 30px;
+  height: 70px;
+  width: 75%;
+}
+
+.free-games-container{
+  max-height: 60vh;
+  overflow-y: auto;
+  border-radius: 5px;
 }
