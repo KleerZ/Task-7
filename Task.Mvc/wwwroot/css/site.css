@@ -49,3 +49,55 @@ html {
   overflow-y: auto;
   border-radius: 5px;
 }
+
+.game-field{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  padding: 0;
+  width: auto;
+  height: 40vh;
+}
+
+.game-cell{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 7px;
+  width: 120px;
+  height: 120px;
+  border: 2px solid #212121;
+  margin: 3px;
+  transition: .2s all linear;
+  font-size: 5ch;
+}
+
+.game-cell:hover{
+  background: #dfdfdf;
+  transition: .2s all linear;
+}
+
+.game-row{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border-radius: 5px;
+}
+
+.game-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+.info-container{
+  height: 10%;
+}
+
+.main-game-container{
+  position: relative;
+  min-height: 90vh;
+}
