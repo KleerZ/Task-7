@@ -19,13 +19,14 @@ html {
   align-items: center;
   width: 100%; !important;
   height: 100%; !important;
+  box-shadow: 3px 12px 12px 1px rgba(0, 0, 0, 0.29);
 }
 
 .modal-dialog{
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90%
+  height: 90%;
 }
 
 .valid-error{
@@ -40,14 +41,20 @@ html {
   border: 1px solid #bbbaba;
   padding-right: 30px;
   padding-left: 30px;
-  height: 70px;
-  width: 75%;
+  min-height: 70px;
+  width: 320px;
+  margin: 5px;
 }
 
 .free-games-container{
-  max-height: 60vh;
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  max-height: 40vh;
   overflow-y: auto;
   border-radius: 5px;
+  /*width: 420px;*/
+  background: white;
+  padding: 10px;
 }
 
 .game-field{
@@ -58,6 +65,7 @@ html {
   padding: 0;
   width: auto;
   height: 40vh;
+  width: auto;
 }
 
 .game-cell{
@@ -67,14 +75,16 @@ html {
   border-radius: 7px;
   width: 120px;
   height: 120px;
-  border: 2px solid #212121;
+  /*border: 2px solid #212121;*/
   margin: 3px;
   transition: .2s all linear;
   font-size: 5ch;
+  background: #121212;
+  color: white;
 }
 
 .game-cell:hover{
-  background: #dfdfdf;
+  background: #000000;
   transition: .2s all linear;
 }
 
@@ -84,6 +94,7 @@ html {
   align-items: center;
   padding: 0;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .game-container{
@@ -99,5 +110,85 @@ html {
 
 .main-game-container{
   position: relative;
-  min-height: 90vh;
+      min-height: 90vh;
+}
+
+.wait-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.result-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.wait-container-text{
+  position: absolute;
+  color: white;
+  z-index: 1;
+}
+
+.wait-container-bg{
+  position: relative;
+  opacity: 80%;
+  background: black;
+  width: 100%;
+  height: 100%;
+  transition: .2s all linear;
+}
+
+.login-bg{
+  background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+}
+
+.home-bg{
+  background: white;
+  /*width: auto;*/
+}
+
+.container{
+  border-radius: 10px;
+}
+
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+  height: 100vh;
+  width: auto;
+}
+
+.lobbies-container{
+  background: white;
+  /*height: 50vh;*/
+}
+
+.home-container{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  height: auto;
+}
+
+.connect-container{
+  /*width: 420px;*/
+}
+
+#result-container{
+  display: none;
 }

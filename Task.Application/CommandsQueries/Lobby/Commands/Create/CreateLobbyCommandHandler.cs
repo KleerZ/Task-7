@@ -30,6 +30,9 @@ public class CreateLobbyCommandHandler : IRequestHandler<CreateLobbyCommand, Gui
             Players = new List<Domain.Player> { player }
         };
 
+        player.StepSymbol = "X";
+        lobby.PlayerNameStep = player.Name;
+
         await _context.Lobbies.AddAsync(lobby, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 

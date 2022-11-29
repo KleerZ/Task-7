@@ -1,39 +1,64 @@
+@using System.Security.Claims
+@model Guid
+
 @{
     ViewData["Title"] = "Game";
 }
 
-<div class="container main-game-container">
-    <div class="info-container">
-        <div class="row">
-                <div class="col fw-bold fs-3 mt-2">
-                    Connection id: 2555889
-                </div>
-            </div>
-            <div class="row">
-                <div class="col fw-bold fs-4">
-                    Players: Player1, Player2
-                </div>
-            </div>
+<div class="wait-container fs-3 fw-bold">
+    <div class="wait-container-text d-flex flex-column">
+        <div class="d-flex w-100 justify-content-center">
+            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+            <div class="d-flex justify-content-center align-items-center">Waiting for players...</div>
+        </div>
+        <div class="col fw-bold fs-3 mt-2">
+            Connection id: <span id="connection-id">@Model</span>
+        </div>
+        
     </div>
+    <div class="wait-container-bg"></div>
+</div>
+
+
+<div id="result-container" class="result-container fs-3 fw-bold">
+    <div class="wait-container-text d-flex flex-column">
+        <div class="d-flex w-100 justify-content-center">
+            <div id="result-container-text" class="d-flex justify-content-center align-items-center">Winner is</div>
+        </div>
+        <div class="col fw-bold fs-3 mt-2">
+            <button id="restart-btn" class="btn btn-primary w-100">Restart</button>
+        </div>
+        
+    </div>
+    <div class="wait-container-bg"></div>
+</div>
+
+
+<input id="player-name" type="hidden" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
+<div class="container main-game-container">
 
     <div class="row game-container d-flex justify-content-center">
+        <div id="player-step" class="row fs-3 text-white fw-bold d-flex justify-content-center"></div>
         <div class="row game-field">
             <div class="text-center game-row">
-                <div class="game-cell"></div>
-                <div class="game-cell"></div>
-                <div class="game-cell"></div>
+                <div id="1" onclick="step(this)" class="game-cell"></div>
+                <div id="2" onclick="step(this)" class="game-cell"></div>
+                <div id="3" onclick="step(this)" class="game-cell"></div>
             </div>
             <div class="text-center game-row">
-                <div class="game-cell"></div>
-                <div class="game-cell"></div>
-                <div class="game-cell"></div>
+                <div id="4" onclick="step(this)" class="game-cell"></div>
+                <div id="5" onclick="step(this)" class="game-cell"></div>
+                <div id="6" onclick="step(this)" class="game-cell"></div>
             </div>
             <div class="text-center game-row">
-                <div class="game-cell"></div>
-                <div class="game-cell"></div>
-                <div class="game-cell"></div>
+                <div id="7" onclick="step(this)" class="game-cell"></div>
+                <div id="8" onclick="step(this)" class="game-cell"></div>
+                <div id="9" onclick="step(this)" class="game-cell"></div>
             </div>
         </div>
     </div>
 
 </div>
+
+<script src="~/lib/signalr.min.js"></script>
+<script src="~/js/lobby.js"></script>
