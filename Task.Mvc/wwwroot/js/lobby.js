@@ -6,6 +6,7 @@ let playerStep;
 let steps = []
 let lobbyResult;
 let status;
+let pCount = 0
 
 const hub = new signalR.HubConnectionBuilder()
     .withUrl("/lobby")
@@ -13,8 +14,9 @@ const hub = new signalR.HubConnectionBuilder()
 
 window.onload = async () => {
     await hub.start()
-    
+
     hub.invoke("CheckPlayers", connectionId, playerName)
+    hub.invoke("SendLobbyInfo", connectionId, 'WaitingForPlayers')
     hub.invoke("GetStepSymbol", playerName)
     hub.invoke("GetPlayerNameStep", connectionId)
     hub.invoke("GetField", connectionId, playerName)
@@ -22,8 +24,16 @@ window.onload = async () => {
 }
 
 hub.on("CheckPlayers", function (message) {
-    if (message.playersCount === 2)
+    pCount = message.playersCount
+    console.log(pCount)
+    if (message.playersCount === 2){
         removeWaitingPlayerBanner()
+        hub.invoke("SendLobbyInfo", connectionId, "Occupied")
+    }
+    else {
+        showWaitingPlayerBanner()
+    }
+        
 })
 
 hub.on("GetStepSymbol", function (symbol) {
@@ -54,14 +64,23 @@ hub.on("GetLobbyStatus", function (result) {
     status = result
 })
 
-hub.on("Restart", function (result) {
+hub.on("Restart", function () {
     hideLobbyResult()
     hub.invoke("GetStepSymbol", playerName)
 })
 
+hub.on("Connect", function () {
+    hub.invoke("CheckPlayers", connectionId, playerName)
+})
+
+function showWaitingPlayerBanner() {
+    let banner = document.querySelector('.wait-container')
+    banner.style.display = "flex"
+}
+
 function removeWaitingPlayerBanner() {
     let banner = document.querySelector('.wait-container')
-    banner.remove()
+    banner.style.display = "none"
 }
 
 function step(elem) {
@@ -113,6 +132,14 @@ function hideLobbyResult(){
 
 let restartBtn = document.querySelector('#restart-btn')
 restartBtn.addEventListener('click', () => {
-    lobbyResult = ""
-    hub.invoke("Restart", connectionId)
+    // hub.invoke("CheckPlayers", connectionId, playerName)
+    hub.invoke("Restart", connectionId, playerName)
+    // hub.invoke("CheckPlayers", connectionId, playerName)
+    hub.invoke("Connect", connectionId, playerName)
+    hub.invoke("CheckPlayers", connectionId, playerName)
+    console.log(pCount)
+    location.reload()
+   
+    
+    console.log(pCount)
 })

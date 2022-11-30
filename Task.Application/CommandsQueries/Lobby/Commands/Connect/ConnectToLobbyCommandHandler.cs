@@ -39,12 +39,13 @@ public class ConnectToLobbyCommandHandler : IRequestHandler<ConnectToLobbyComman
             request.ModelState.AddModelError("lobby-occupied", "the lobby is occupied");
             return new ConnectLobbyVm { ModelState = request.ModelState };
         }
-
-        lobby.Players.Add(player);
         
+        lobby.Players.Add(player);
+
         if (lobby.Players.IndexOf(player) == 1)
             player.StepSymbol = "O";
-        
+
+        _context.Lobbies.Update(lobby);
         await _context.SaveChangesAsync(cancellationToken);
 
         return new ConnectLobbyVm

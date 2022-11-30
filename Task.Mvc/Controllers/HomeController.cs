@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Task.Application.CommandsQueries.Lobby.Commands.Connect;
 using Task.Application.CommandsQueries.Lobby.Commands.Create;
+using Task.Application.CommandsQueries.Lobby.Queries.Get;
 using Task.Application.CommandsQueries.Lobby.Queries.GetFree;
+using Task.Domain;
 using Task.Mvc.Models;
 
 namespace Task.Mvc.Controllers;
@@ -44,7 +46,18 @@ public class HomeController : Controller
 
         return RedirectToAction("Index", "Game", new { connectionId = connectionId });
     }
-    
+
+    [HttpPost]
+    public async Task<IActionResult> LoadFreeLobby()
+    {
+        var query = new GetFreeLobbiesQuery();
+        var result = await _mediator.Send(query);
+
+        var lobbies = result.Lobbies;
+        
+        return Ok(lobbies);
+    }
+
     [HttpPost]
     public async Task<IActionResult> ConnectToLobby(LobbyViewModel model)
     {

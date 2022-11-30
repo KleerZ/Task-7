@@ -29,7 +29,7 @@ public class CheckLobbyWinCommandHandler : IRequestHandler<CheckLobbyWinCommand,
         if (result is null)
             return string.Empty;
         
-        lobby.Status = LobbyStatus.Finished;
+        lobby.Status = LobbyStatus.WaitingForPlayers;
         await _context.SaveChangesAsync(cancellationToken);
 
         if (result == Winners.Draw)

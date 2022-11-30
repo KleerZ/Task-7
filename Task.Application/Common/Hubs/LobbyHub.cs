@@ -1,7 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
+using Task.Application.CommandsQueries.Lobby.Commands.ChangeLobbyStatus;
 using Task.Application.CommandsQueries.Lobby.Commands.CheckWin;
+using Task.Application.CommandsQueries.Lobby.Commands.Connect;
 using Task.Application.CommandsQueries.Lobby.Commands.Restart;
 using Task.Application.CommandsQueries.Lobby.Commands.Step;
 using Task.Application.CommandsQueries.Lobby.Queries.CheckPlayersCount;
@@ -10,6 +13,8 @@ using Task.Application.CommandsQueries.Lobby.Queries.GetPlayerNameStep;
 using Task.Application.CommandsQueries.Lobby.Queries.GetPlayers;
 using Task.Application.CommandsQueries.Lobby.Queries.GetStatus;
 using Task.Application.CommandsQueries.Player.Queries.GetPlayerStepSymbol;
+using Task.Application.Common.Data;
+using Task.Application.Common.Interfaces;
 
 namespace Task.Application.Common.Hubs;
 
@@ -17,10 +22,12 @@ namespace Task.Application.Common.Hubs;
 public class LobbyHub : Hub
 {
     private readonly IMediator _mediator;
+    private readonly IApplicationContext _context;
 
-    public LobbyHub(IMediator mediator)
+    public LobbyHub(IMediator mediator, IApplicationContext context)
     {
         _mediator = mediator;
+        _context = context;
     }
 
     public async System.Threading.Tasks.Task GetField(string connectionId, string playerName)
@@ -61,6 +68,7 @@ public class LobbyHub : Hub
         {
             await Clients.User(player.Name).SendAsync("CheckPlayers", message);
             await GetLobbyResult(connectionId, player.Name);
+            await GetField(connectionId, player.Name);
         }
     }
 
@@ -115,8 +123,6 @@ public class LobbyHub : Hub
 
         var cells = await _mediator.Send(command);
         
-       
-
         foreach (var player in players.Players!)
         {
             await GetPlayerNameStep(connectionId);
@@ -160,8 +166,16 @@ public class LobbyHub : Hub
         }
     }
 
-    public async System.Threading.Tasks.Task Restart(Guid connectionId)
+    public async System.Threading.Tasks.Task Restart(Guid connectionId, string playerName)
     {
+        var command = new RestartLobbyCommand
+        {
+            ConnectionId = connectionId,
+            PlayerName = playerName
+        };
+        
+        await _mediator.Send(command);
+        
         var queryPlayers = new GetLobbyPlayersQuery
         {
             ConnectionId = connectionId
@@ -169,20 +183,56 @@ public class LobbyHub : Hub
 
         var players = await _mediator.Send(queryPlayers);
         
-        var command = new RestartLobbyCommand
+        if (players.Players.Count() == 2)
         {
+            foreach (var p in players.Players)
+            {
+                await Clients.User(p.Name).SendAsync("Restart");
+                await CheckPlayers(connectionId.ToString(), p.Name);
+                await GetField(connectionId.ToString(), p.Name);
+                await GetPlayerNameStep(connectionId.ToString());
+                await GetLobbyStatus(connectionId.ToString());
+                await CheckPlayers(connectionId.ToString(), p.Name);
+            }
+        }
+
+        await Clients.User(playerName).SendAsync("Restart");
+        await CheckPlayers(connectionId.ToString(), playerName);
+        await GetField(connectionId.ToString(), playerName);
+        await GetPlayerNameStep(connectionId.ToString());
+        await GetLobbyStatus(connectionId.ToString());
+        await CheckPlayers(connectionId.ToString(), playerName);
+        
+
+    }
+
+    public async System.Threading.Tasks.Task SendLobbyInfo(Guid connectionId, string status)
+    {
+        var command = new ChangeLobbyStatusCommand
+        {
+            Status = status,
             ConnectionId = connectionId
         };
-        
-        await _mediator.Send(command);
 
-        foreach (var player in players.Players!)
+        await _mediator.Send(command);
+        
+        await Clients.All.SendAsync("SendLobbyInfo");
+    }
+    
+    public async System.Threading.Tasks.Task Connect(Guid connectionId, string player)
+    {
+        var command = new ConnectToLobbyCommand
         {
-            await Clients.User(player.Name).SendAsync("Restart");
-            await CheckPlayers(connectionId.ToString(), player.Name);
-            await GetField(connectionId.ToString(), player.Name);
-            await GetPlayerNameStep(connectionId.ToString());
-            await GetLobbyStatus(connectionId.ToString());
-        }
+            PlayerName = player,
+            ConnectionId = connectionId
+        };
+
+        await _mediator.Send(command);
+        
+        await Clients.User(player).SendAsync("Connect");
+        await CheckPlayers(connectionId.ToString(), player);
+        await GetField(connectionId.ToString(), player);
+        await GetPlayerNameStep(connectionId.ToString());
+        await GetLobbyStatus(connectionId.ToString());
     }
 }
