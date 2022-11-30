@@ -73,6 +73,10 @@ hub.on("Connect", function () {
     hub.invoke("CheckPlayers", connectionId, playerName)
 })
 
+hub.on("Leave", function () {
+    hub.invoke("CheckPlayers", connectionId, playerName)
+})
+
 function showWaitingPlayerBanner() {
     let banner = document.querySelector('.wait-container')
     banner.style.display = "flex"
@@ -143,3 +147,5 @@ restartBtn.addEventListener('click', () => {
     
     console.log(pCount)
 })
+
+//LEAVE

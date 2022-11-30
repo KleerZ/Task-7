@@ -235,4 +235,19 @@ public class LobbyHub : Hub
         await GetPlayerNameStep(connectionId.ToString());
         await GetLobbyStatus(connectionId.ToString());
     }
+
+    public async System.Threading.Tasks.Task LeaveGame(Guid connectionId)
+    {
+        var queryPlayers = new GetLobbyPlayersQuery
+        {
+            ConnectionId = connectionId
+        };
+
+        var result = await _mediator.Send(queryPlayers);
+
+        foreach (var player in result.Players)
+        {
+            await Clients.User(player.Name).SendAsync("Leave");
+        }
+    }
 }
