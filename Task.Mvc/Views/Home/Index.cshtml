@@ -1,8 +1,67 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using System.Security.Claims
+
+@model LobbyViewModel
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container home-bg">
+    <div class="row home-container d-flex flex-column">
+
+        <div class="col-md mb-3 d-flex justify-content-center align-items-center">
+            <div class="w-auto h-auto">
+                <div class="row text-center mb-3 d-flex justify-content-center align-items-center">
+                    <div class="row text-center">
+                        <span class="mb-2 fs-5 fw-bolder">Create lobby</span>
+                    </div>
+                    <form class="w-100" asp-action="CreateLobby" asp-controller="Home">
+                        <div class="row d-flex justify-content-center">
+
+                            <input asp-for="PlayerName" id="player-name" type="hidden" value="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">
+                            <button type="submit" id="create-btn" class="btn btn-success w-75">Create</button>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="row mb-2 text-center">
+                        <span class="fs-5 fw-bolder">Connect to lobby</span>
+                    </div>
+                    <form asp-controller="Home" asp-action="ConnectToLobby">
+                        <div class="row mb-2 d-flex justify-content-center">
+                            <input asp-for="ConnectionId" id="connect-id-input" class="form-control w-75" type="text">
+                            <input asp-for="PlayerName" id="player-name" type="hidden" value="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">
+                            <span class="valid-error w-75">@Html.ValidationMessage("lobby-error")</span>
+                            <span class="valid-error w-75">@Html.ValidationMessage("lobby-occupied")</span>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <button type="submit" disabled id="connect-btn" class="btn btn-primary w-75">Connect</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md mb-3 w-100 lobbies-container">
+            <div class="w-auto d-flex justify-content-center w-75 flex-column align-items-center">
+                <div class="row fs-5 fw-bolder text-center mb-2">
+                    <span>Free games</span>
+                </div>
+                <div class="row d-flex justify-content-center free-games-container w-75">
+
+                    @foreach (var lobby in Model.Lobbies!)
+                    {
+                        <row class="free-game mb-2">
+                            <div class="row fw-bolder">Сreator: @lobby.Creator</div>
+                            <div class="row fw-bolder">Connection id: @lobby.ConnectionId</div>
+                        </row>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="~/lib/signalr.min.js"></script>
+<script src="~/js/home.js"></script>

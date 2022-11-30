@@ -4,6 +4,18 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Task.Application\Task.Application.csproj" />
+      <ProjectReference Include="..\Task.Domain\Task.Domain.csproj" />
+      <ProjectReference Include="..\Task.Persistence\Task.Persistence.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
+    </ItemGroup>
 
 </Project>
