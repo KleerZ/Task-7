@@ -45,6 +45,12 @@ public class ConnectToLobbyCommandHandler : IRequestHandler<ConnectToLobbyComman
         if (lobby.Players.IndexOf(player) == 1)
             player.StepSymbol = "O";
 
+        if (lobby.Players.Count > 1)
+        {
+            lobby.PlayerNameStep = lobby.Players
+                .FirstOrDefault(p => p.StepSymbol == GameSymbols.Cross)!.Name;
+        }
+
         _context.Lobbies.Update(lobby);
         await _context.SaveChangesAsync(cancellationToken);
 
